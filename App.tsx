@@ -1,20 +1,44 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+/* eslint-disable camelcase */
+import { Loading } from '@components/Loading'
+import {
+  useFonts,
+  Roboto_400Regular,
+  Roboto_700Bold,
+} from '@expo-google-fonts/roboto'
+import {
+  useFonts as useFontsBaloo2,
+  Baloo2_400Regular,
+  Baloo2_700Bold,
+} from '@expo-google-fonts/baloo-2'
+import { Routes } from '@routes/index'
+import { THEME } from './src/styles/theme'
+import { NativeBaseProvider } from 'native-base'
+import { StatusBar } from 'react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { ShoppingCartContextProvider } from '@hooks/useShoppingCart'
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+  const [fontsRobotoLoaded] = useFonts({
+    Roboto_400Regular,
+    Roboto_700Bold,
+  })
+  const [fontsBalooLoaded] = useFonts({
+    Baloo2_400Regular,
+    Baloo2_700Bold,
+  })
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  return (
+    <NativeBaseProvider theme={THEME}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <ShoppingCartContextProvider>
+          <StatusBar
+            barStyle="light-content"
+            backgroundColor="transparent"
+            translucent
+          />
+          {fontsRobotoLoaded && fontsBalooLoaded ? <Routes /> : <Loading />}
+        </ShoppingCartContextProvider>
+      </GestureHandlerRootView>
+    </NativeBaseProvider>
+  )
+}
